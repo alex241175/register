@@ -12,7 +12,7 @@
         <v-flex>
             <v-card> 
             <v-card-title>
-                <h5 class="hand" @click="openEvent(event.id)">{{ '[' + event.category + '] ' +  event.title + ' ' +
+                <h5 class="hand" @click="openEvent(event.id)">{{ event.id + ' [' + event.category + '] ' +  event.title + ' ' +
                    formatDateTime(event.start) + ' (' + formatWeekDay(event.start) + ')' }}
                 </h5>
                 <v-spacer></v-spacer>

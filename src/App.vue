@@ -51,5 +51,8 @@ export default {
     .hand{
       cursor: pointer;
     }
+    .v-data-table td {
+      font-size: 1rem !important;
+    }
 
 </style>

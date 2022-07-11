@@ -119,6 +119,7 @@ export const store = new Vuex.Store({
         event.location = doc.data().location
         event.start = doc.data().start.toDate()
         event.end = doc.data().end.toDate()
+        event.remark = doc.data().remark
 
         const path = 'events/' + payload + '/members'
         event.members = await db.collection(path).get()

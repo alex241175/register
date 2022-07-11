@@ -8,7 +8,7 @@
                 <h5>{{ '[' + event.category + '] ' +  event.title + ' ' + formatDateTime(event.start)  + ' 至 ' + formatTime(event.end) + ' (' + formatWeekDay(event.start) + ')'}}</h5>
               </v-card-title>
               <v-card-text>
-                {{event.location}}
+                {{ event.location + ' ' + event.remark}}
             </v-card-text>
            </v-card>
         </v-flex>
@@ -43,7 +43,7 @@
     <v-simple-table>
       <thead>
         <tr>
-          <th class="text-left" @click="sortBy('id')">No</th>
+          <!-- <th class="text-left" @click="sortBy('id')">No</th> -->
           <th class="text-left" @click="sortBy('gender')">性別</th>
           <th class="text-left" @click="sortBy('school')">地區</th>
           <th class="text-left" @click="sortBy('name')">姓名</th>
@@ -51,14 +51,17 @@
         </tr>
       </thead>
        <tbody>
-        <tr v-for="(member, index) in membersList" :key="member.id" >
-            <td> {{index + 1 }}</td>
+        <tr v-for="(member) in membersList" :key="member.id" >
+            <!-- <td> {{index + 1 }}</td> -->
             <td>{{ member.gender}} </td>
             <td>{{ member.school}} </td>
-            <td @click.stop="openMemberDialog(member)">{{ member.name}} </td>
+            <td @click.stop="openMemberDialog(member)">
+              {{ member.name}}
+               <p v-if="member.remark"><small>{{ member.remark}}</small></p>
+            </td>
             <td class="text-right">
                 <v-icon v-if="markAttendance" class="hand" @click="toggleAttend(member)">{{ setAttendIcon(member.attend) }}</v-icon>
-                <v-icon @click="deleteMember(member)" v-if="!markAttendance">fa-solid fa-trash-can</v-icon>
+                <v-icon @click="deleteMember(member)" v-if="!markAttendance">fa-solid fa-xmark</v-icon>
             </td>
         </tr>
       </tbody>
@@ -250,7 +253,7 @@ export default {
           case 'gender' :
             return this.event.members.sort((a, b) => (a.gender < b.gender) ? 1: -1) 
           case 'id' :
-            return this.event.members.sort((a, b) => (a.dateAdded > b.dateAdded) ? 1: -1) 
+            return this.event.members.sort((a, b) => (a.dateAdded < b.dateAdded) ? 1: -1) 
       }
     },
     membersSelection(){
