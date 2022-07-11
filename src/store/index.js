@@ -146,6 +146,7 @@ export const store = new Vuex.Store({
     },payload) {
       //retrieve a collection
       db.collection('members')
+      .orderBy('name')
       .get()
       .then(querySnapshot => {
          const members = []
@@ -297,7 +298,7 @@ export const store = new Vuex.Store({
     deleteMember({
       commit
     }, payload) {
-
+      
       db.collection('events')
       .doc(payload.eventId)
       .collection('members')

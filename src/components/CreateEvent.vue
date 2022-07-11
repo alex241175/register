@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card>
+        <v-card  class="ma-2 pa-2" outlined color="transparent">
             <v-card-title>
                 <h4>新增課程</h4>
             </v-card-title>

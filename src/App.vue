@@ -1,6 +1,6 @@
 <template>
   <v-app>
-   <v-app-bar app>
+      <v-app-bar app>
         <v-toolbar-title>
          課程報名
         </v-toolbar-title>
@@ -9,10 +9,9 @@
           <v-btn text v-if="userIsAuthenticated">{{ userName }}</v-btn>
           <v-btn text v-if="!userIsAuthenticated" @click="signIn">Sign in</v-btn>
           <v-btn text v-if="userIsAuthenticated" @click="signOut">Sign Out</v-btn>
-          <v-btn text to="/events" exact>課程</v-btn>
+          <v-btn text v-if="userIsAuthenticated" to="/events" exact>課程</v-btn>
         </v-toolbar-items>
       </v-app-bar>
-
     <v-main>
       <router-view/>
     </v-main>

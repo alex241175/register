@@ -33,7 +33,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn @click="update">修改</v-btn>
-                    <v-btn @click.stop="show = false">Close</v-btn>
+                    <v-btn @click.stop="show = false">X</v-btn>
                 </v-card-actions>
           </v-card>
         </v-dialog>

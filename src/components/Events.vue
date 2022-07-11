@@ -1,10 +1,11 @@
 <template>
   <div>
-    <v-layout>
+    <v-layout class="ma-2">
         <v-flex>
             <v-text-field name="start" label="開始" v-model="start" type="date" @change="filterEvents"
             ></v-text-field>
             <v-btn to="/create-event" exact>新增課程</v-btn>
+            <v-btn class="mx-2" @click="reload"><v-icon>fa-solid fa-arrow-rotate-right</v-icon></v-btn>
         </v-flex>
     </v-layout>
     <v-layout v-for="event in currentPageEvents" :key="event.id" class="mt-2" >
@@ -38,11 +39,10 @@ export default {
   },
   data() {
     return {
-        start: new Date()      
+        start: (new Date()).toISOString().slice(0,10)  // start -> '2022-07-09'
     }
   },
   created() {
-        const start = this.start.toISOString().slice(0,10)  // start -> '2022-07-09'
         this.$store.commit('setFilterStart', this.start);
         this.$store.dispatch('loadEvents')
   },
@@ -68,12 +68,15 @@ export default {
       const url = 'https://register-3c0b8.web.app/register/'+ event.id
       const text = '*[' + event.category + ']' +  event.title + '*\n'
       + this.formatDateTime(event.start) + ' - ' + event.location + '\n'
-      + event.remark + '\n\n'      
+      + '\n'      
       + '請點進去報名，謝謝。' + '\n'
       + url
             
       this.copyToClipboard(text)
         
+    },
+    reload(){
+      this.$store.dispatch('loadEvents')
     }
    
   },
