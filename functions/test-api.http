@@ -1,0 +1,35 @@
+https://register-3c0b8.web.app/api/create
+
+### failed - 400 bad request
+POST https://register-3c0b8.web.app/api/create 
+Content-Type: application/json
+
+{
+    "title": "testing via api",
+    "category": "hellow",
+    "start": "",
+    "end": "",
+    "location": "",
+    "head": "",
+    "speaker": "",
+    "service": "",
+    "remark": "",
+}
+
+###
+
+https://register-3c0b8.web.app/api/create?category=壇人班&title=道是什麼&start=2022-07-15T20:00:00.000Z&end=2022-07-15T22:00:00.000Z&location=南馬中心&head=&speaker=&service=&remark=
+
+###
+
+POST https://gorest.co.in/public/v2/users?access-token=50a05509ad36be238f3a05d285105b34ccd0480438fd249a9318b2375d1cb8d1
+Content-Type: application/json
+
+{   
+    "name":"Dr. Alex Teh Yi Ke",
+    "email":"kyc@gmail.com",
+    "gender":"female",
+    "status":"inactive"
+}
+
+
