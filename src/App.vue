@@ -9,6 +9,7 @@
           <v-btn text v-if="userIsAuthenticated">{{ userName }}</v-btn>
           <v-btn text v-if="!userIsAuthenticated" @click="signIn">Sign in</v-btn>
           <v-btn text v-if="userIsAuthenticated" @click="signOut">Sign Out</v-btn>
+          <v-btn text v-if="userIsAuthenticated" to="/members" exact>人員</v-btn>
           <v-btn text v-if="userIsAuthenticated" to="/events" exact>課程</v-btn>
         </v-toolbar-items>
       </v-app-bar>

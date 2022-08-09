@@ -3,7 +3,7 @@
         <v-dialog v-model="show">
             <v-card>
                 <v-card-title>
-                <h4>{{ member.id ? '修改' : '新增' }}</h4>
+                <h4>修改</h4>
                 </v-card-title>
                 <v-card-text>
                     <v-row>
@@ -26,15 +26,15 @@
                     </v-row>
                     <v-row>
                         <v-col cols="12">
-                            <v-select :items="categories" label="課程" autocomplete hide-selected
-                            v-model="member.category" required></v-select>
+                            <v-text-field label="備註" v-model="member.remark" clearable></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn :disabled="!formIsValid" @click="updateMember"> {{ member.id ? '修改' : '新增' }}</v-btn>
-                    <v-btn @click.stop="show = false">X</v-btn>
+                    <v-btn @click="updateRegisteredMember">修改</v-btn>
+                    <v-btn @click.stop="show = false">關閉</v-btn>
+                    <v-btn @click.stop="deleteRegisteredMember">刪除</v-btn>
                 </v-card-actions>
           </v-card>
         </v-dialog>
@@ -42,11 +42,12 @@
 </template>
 <script>
 
+
 export default {
     props: ['visible','member'],
     data(){
         return {
-            schools:['士C','士D','地南','古來'],
+            schools:['士C','士D','地南','古來','居鑾','麻坡'],
         }
     },
     computed: {
@@ -59,24 +60,15 @@ export default {
                     this.$emit('close')
                 }
             }
-        },
-        categories() {
-            return this.$store.getters.categories;
-        },
-        formIsValid() {
-            return this.member.gender != '' 
-            && this.member.school != ''
-            && this.member.name != '' 
-            && this.member.category != '';
-        },
+        }
     },
     methods: {
-        updateMember(){
-            if (this.member.id){
-                this.$emit('updateMember',this.member)
-            }else{
-                this.$emit('createMember',this.member)
-            }
+ 
+        updateRegisteredMember(){
+            this.$emit('updateRegisteredMember',this.member)
+        },
+        deleteRegisteredMember(){
+            this.$emit('deleteRegisteredMember',this.member)
         }
     }
 

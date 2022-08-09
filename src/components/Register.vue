@@ -14,7 +14,7 @@
         </v-flex>
     </v-layout>
     <!-- registering new member-->
-    <v-layout row class="ma-1 pa-1" style="background-color:#eeeeee;">
+    <v-layout row class="ma-1 pa-1" style="background-color:#eeeeee;" v-if="addNew || event.mode != '1'">
       <v-flex xs-4>
         <!-- <v-text-field label="姓名" v-model="newMember.name" clearable></v-text-field> -->
          <v-combobox label="請輸入姓名" item-text="name" item-value="id" 
@@ -36,7 +36,7 @@
         <v-select style="max-width: 200px;" :items="schools" label="地區" v-model="newMember.school" ></v-select>
       </v-flex>
       <v-flex xs-12>
-        <v-btn :disabled="!formIsValid" @click="register">報名</v-btn>
+        <v-btn :disabled="!formIsValid" @click="CreateRegisteredMember">報名</v-btn>
       </v-flex>
     </v-layout>
     <!-- Members list -->
@@ -47,7 +47,7 @@
           <th class="text-left" @click="sortBy('gender')">性別</th>
           <th class="text-left" @click="sortBy('school')">地區</th>
           <th class="text-left" @click="sortBy('name')">姓名</th>
-          <th class="text-left"></th>
+          <th class="text-right"><span v-if="event.mode == '1'">出席？</span></th>
         </tr>
       </thead>
        <tbody>
@@ -55,13 +55,13 @@
             <!-- <td> {{index + 1 }}</td> -->
             <td>{{ member.gender}} </td>
             <td>{{ member.school}} </td>
-            <td @click.stop="openMemberDialog(member)">
+            <td class="hand" @click.stop="openMemberDialog(member)">
               {{ member.name}}
                <p v-if="member.remark"><small>{{ member.remark}}</small></p>
             </td>
             <td class="text-right">
-                <v-icon v-if="markAttendance" class="hand" @click="toggleAttend(member)">{{ setAttendIcon(member.attend) }}</v-icon>
-                <v-icon @click="deleteMember(member)" v-if="!markAttendance">fa-solid fa-xmark</v-icon>
+                <v-icon v-if="markAttendance || event.mode =='1'" class="hand" @click="toggleAttend(member)">{{ setAttendIcon(member.attend) }}</v-icon>
+                <v-icon @click="deleteRegisteredMember(member)" v-if="!markAttendance && event.mode != '1'">fa-solid fa-xmark</v-icon>
             </td>
         </tr>
       </tbody>
@@ -84,18 +84,20 @@
         {{ '男:' + maleSum + '  女:' + femaleSum + '  共:' + (maleSum + femaleSum) }}
       </v-flex>
       <v-flex xs12 class="mt-2">
-        <v-btn small text @click="toggleMarkAttendance">{{ markAttendance ? '關閉掛號':'開啟掛號'}}</v-btn>
+        <v-btn small text v-if="event.mode != '1'" @click="toggleMarkAttendance">{{ markAttendance ? '關閉掛號':'開啟掛號'}}</v-btn>
+        <v-btn small text v-if="event.mode == '1'" @click="addNew = !addNew">新增人員</v-btn>
         <v-btn small text @click="exportList">清單</v-btn>
       </v-flex>
     </v-layout>  
-     <MemberDialog  :member="selectedMember" :visible="showMemberDialog" @close="showMemberDialog=false" @updateMember="updateMember"/>
+     <RegisteredMemberDialog  :member="selectedMember" :visible="showRegisteredMemberDialog" @close="showRegisteredMemberDialog=false"
+     @deleteRegisteredMember="deleteRegisteredMember" @updateRegisteredMember="updateRegisteredMember"/>
   </v-container>
 
 </template>
 
 <script>
 
-import MemberDialog from './MemberDialog.vue'
+import RegisteredMemberDialog from './RegisteredMemberDialog.vue'
 
 export default {
   name: 'Register',
@@ -108,15 +110,16 @@ export default {
         school: '士C',
       },
       memberObj:null,
-      schools:['士C','士D','地南','古來'],
-      showMemberDialog : false,
+      schools:['士C','士D','地南','古來','居鑾','麻坡'],
+      showRegisteredMemberDialog : false,
       selectedMember:{},
       markAttendance: false,
+      addNew: false,
       sortKey: 'id',
     }
   },
   components: {
-      MemberDialog
+      RegisteredMemberDialog
   },
   created() {
     this.$store.dispatch('loadRegisteredEvent', this.id)
@@ -124,15 +127,15 @@ export default {
   },
   methods: {
     openMemberDialog(member){
-        this.selectedMember = member
-        this.showMemberDialog = true
+        this.selectedMember = {...member};  // Spread Syntax
+        this.showRegisteredMemberDialog = true
     },
     customFilter (item, queryText, itemText) {
         const textOne = item.name.toLowerCase()
         const searchText = queryText.toLowerCase()
         return textOne.indexOf(searchText) > -1 
     },
-    register(){
+    CreateRegisteredMember(){
       // if (this.memberObj instanceof Object == false){  // user type value
       //     this.newMember.name = this.memberObj
       // }
@@ -145,30 +148,33 @@ export default {
         attend: 0,
         category: this.event.category
       }
-      this.$store.dispatch('register', payload)
+      this.$store.dispatch('CreateRegisteredMember', payload)
       this.newMember.gender = ''
       this.newMember.name = ''
       this.memberObj = null
       //reload
       this.$store.dispatch('loadRegisteredEvent', this.id)
     },
-    deleteMember(member){
+    deleteRegisteredMember(member){
       const payload = {
         eventId : this.id,
-        memberId : member.id
+        memberId : member.id,
+        category: this.event.category,
+        name: member.name
       }
-      this.$store.dispatch('deleteMember', payload)
+      this.$store.dispatch('deleteRegisteredMember', payload)
       //reload
+      this.showRegisteredMemberDialog=false
       this.$store.dispatch('loadRegisteredEvent', this.id)
     },
-    updateMember(member){
+    updateRegisteredMember(member){
       const payload = {
         eventId : this.id,
         member : member
       }
-      this.$store.dispatch('updateMember', payload)
+      this.$store.dispatch('updateRegisteredMember', payload)
       //reload
-      this.showMemberDialog=false
+      this.showRegisteredMemberDialog=false
       this.$store.dispatch('loadRegisteredEvent', this.id)
     },
     
@@ -191,7 +197,7 @@ export default {
             member.attend = 0
             break
       }
-      this.updateMember(member);
+      this.updateRegisteredMember(member);
     },
     toggleMarkAttendance(){
       this.markAttendance = !this.markAttendance
@@ -244,7 +250,6 @@ export default {
         && this.newMember.school != '';
     },
     membersList(){
-      console.log(this.sortKey)
         switch(this.sortKey){
           case 'name' : 
             return this.event.members.sort((a, b) => (a.name > b.name) ? 1 : -1) 
@@ -258,7 +263,9 @@ export default {
     },
     membersSelection(){
       const registeredMembers = this.event.members.map( m => { return m.name})
-      return this.$store.getters.members.filter(m => m.category == this.event.category && registeredMembers.indexOf(m.name) == -1)
+      return this.$store.getters.members
+      .filter(m => m.category == this.event.category && registeredMembers.indexOf(m.name) == -1)
+      .sort((x,y)=>x.name.localeCompare(y.name, 'zh-CN'))  // sort by pin yin
     }
  
   }

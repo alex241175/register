@@ -5,6 +5,7 @@ import CreateEvent from '../components/CreateEvent'
 import EditEvent from '../components/EditEvent'
 import Register from '../components/Register'
 import Home from '../components/Home'
+import Members from '../components/Members'
 import AuthGuard from './auth-guard';
 
 Vue.use(VueRouter)
@@ -15,6 +16,8 @@ const routes = [
   { path: '/create-event', name: 'create-event', component: CreateEvent, beforeEnter: AuthGuard},
   { path: '/edit-event/:id', name: 'edit-event', props: true, component: EditEvent, beforeEnter: AuthGuard},
   { path: '/register/:id', name: 'register', props: true, component: Register },
+  { path: '/members', name: 'members', component: Members,  beforeEnter: AuthGuard },
+
 ]
 
 const router = new VueRouter({
