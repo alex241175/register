@@ -19,7 +19,7 @@
           </th>
           <th class="text-left">性別</th>
           <th class="text-left">地區</th>
-          <th class="text-left">姓名</th>
+          <th class="text-left" @click="sortBy('name')">姓名</th>
           <th class="text-left">課程</th>
           <th class="text-left"></th>
         </tr>
@@ -84,6 +84,7 @@ export default {
       copyToCategory: '',
       selected: [],
       top: true,
+      sortKey: 'id',
     }
   },
    components: {
@@ -141,6 +142,9 @@ export default {
         this.$store.dispatch('loadMembers')
         this.selected = []
         alert("復制完成")
+    },
+    sortBy(key){
+      this.sortKey = key
     }
   },
   computed: {

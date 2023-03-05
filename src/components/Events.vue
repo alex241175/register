@@ -13,7 +13,7 @@
             <v-card> 
             <v-card-title>
                 <h5 class="hand" @click="openEvent(event.id)">{{ event.id + ' [' + event.category + '] ' +  event.title + ' ' +
-                   formatDateTime(event.start) + ' (' + formatWeekDay(event.start) + ')' }}
+                   formatDate(event.start) + ' (' + formatWeekDay(event.start) + ') ' + formatTime(event.start) }}
                 </h5>
                 <v-spacer></v-spacer>
                  <v-btn class="mr-2" small fab @click="notice(event)">通知</v-btn>
@@ -67,7 +67,8 @@ export default {
     notice(event){
       const url = 'https://register-3c0b8.web.app/register/'+ event.id
       const text = '*[' + event.category + ']' +  event.title + '*\n'
-      + this.formatDateTime(event.start) + ' - ' + event.location + '\n'
+      + this.formatDate(event.start) + ' ('+ this.formatWeekDay(event.start) + ') ' 
+      + this.formatTime(event.start) + ' - ' + event.location + '\n'
       + '\n'      
       + '請點進去報名，謝謝。' + '\n'
       + url

@@ -5,7 +5,7 @@
         <v-flex>
            <v-card outlined color="transparent"> 
               <v-card-title>
-                <h5>{{ '[' + event.category + '] ' +  event.title + ' ' + formatDateTime(event.start)  + ' 至 ' + formatTime(event.end) + ' (' + formatWeekDay(event.start) + ')'}}</h5>
+                <h5>{{ '[' + event.category + '] ' +  event.title + ' ' + formatDate(event.start) + ' (' + formatWeekDay(event.start) + ') ' + formatTime(event.start) + ' 至 ' + formatTime(event.end)}}</h5>
               </v-card-title>
               <v-card-text>
                 {{ event.location + ' ' + event.remark}}
@@ -214,7 +214,7 @@ export default {
     },
     exportList(){
       var text = '[' + this.event.category + ']' +  this.event.title + '\n'
-      + this.formatDateTime(this.event.start) + ' - ' + this.event.location + '\n'
+      + this.formatDate(this.event.start) + ' (' + this.formatWeekDay(this.event.start) + ') ' + this.formatTime(this.event.start) + ' - ' + this.event.location + '\n'
       + '\n'
       this.event.members.sort((a, b) => (a.gender < b.gender) ? 1 : -1).forEach((member, index) =>{
         text += (index + 1) + ')' + member.gender + ' '+ member.name + '\n'
