@@ -214,10 +214,12 @@ export default {
     },
     exportList(){
       var text = '[' + this.event.category + ']' +  this.event.title + '\n'
-      + this.formatDate(this.event.start) + ' (' + this.formatWeekDay(this.event.start) + ') ' + this.formatTime(this.event.start) + ' - ' + this.event.location + '\n'
+      + this.formatDate(this.event.start) + ' (' + this.formatWeekDay(this.event.start) + ') ' + this.formatTime(this.event.start) + ' - ' + this.formatTime(this.event.end) + ' '+ this.event.location + '\n'
       + '\n'
       this.event.members.sort((a, b) => (a.gender < b.gender) ? 1 : -1).forEach((member, index) =>{
-        text += (index + 1) + ')' + member.gender + ' '+ member.name + '\n'
+        text += (index + 1) + ')' + member.gender + ' '+ member.name
+        text += member.remark ? ' (' + member.remark + ')' : '' 
+        text += '\n'
       })
       text += '\n'
       text += '男:' + this.maleSum + '  女:' + this.femaleSum + '  共:' + (this.maleSum + this.femaleSum)
